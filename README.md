@@ -14,34 +14,40 @@ Local installation requires
 Open command prompt ensure maven and java in the environment path.
 
 Run below command for respective item
-- To cleanup locally
+- To cleanup locally:<br />
    mvn clean 
-- To run the local test
+- To run the local test:<br />
    mvn test 
-- To resolve the local resolve dependencies and compilation
+- To resolve the local resolve dependencies and compilation:<br />
    mvn install
-- To package the application and it creates usermgmt-0.0.1-SNAPSHOT.jar
+- To package the application and it creates usermgmt-0.0.1-SNAPSHOT.jar<br /> 
    mvn package
-- To run the application as a standalone
+- To run the application as a standalone:<br />
    mvn spring-boot:run
-- To run the application as a service(as mentioned above in package)
+- To run the application as a service(as mentioned above in package):<br />
    java -jar  <PATH TO application jar file> 
-- To launch service in a docker
-   docker build --build-arg JAR_FILE=<PATH TO myapp.jar> .
+- To build,launch service in a different ways in docker:<br />
+   -- mvn spring-boot:build-image -Dspring-boot.build-image.imageName=<IMAGE_NAME> (or) <br /> 
+      docker build --build-arg JAR_FILE=<PATH TO myapp.jar> . <br />
+   -- docker run -p 8080:8080 -t <<IMAGE_NAME>>
+   
 
 How to launch H2 database through browser
- - Once you start the application by mvn spring-boot:run browse through the url to access database: http://localhost:8080/h2-console
+ - Once you start the application by mvn spring-boot:run browse through the url to access database: <br />http://localhost:8080/h2-console
   
  We can use test it through either postman or using below curl command
  - GET: All users
        curl --location --request GET 'http://localhost:8080/users' --header 'Content-Type: application/json'
+<br />
 
  - GET: All user by salary search criteria and sort by Id
        curl --location --request GET 'http://localhost:8080/users/1/100' --header 'Content-Type: application/json'
- 
+ <br />
+
  - GET: A user by Id
        curl --location --request GET 'http://localhost:8080/users/e0004' --header 'Content-Type: application/json'
-       
+<br />
+
  - POST: createUser
        curl --location --request POST 'http://localhost:8080/users' \
 			--header 'Content-Type: application/json' \
@@ -52,6 +58,7 @@ How to launch H2 database through browser
 			            "salary": 19234.5,
 			            "startdate": "2001-11-16"
 			        }'
+<br />
 
  - PUT: updateUser
 			curl --location --request PUT 'http://localhost:8080/users/E00021' \
@@ -63,20 +70,23 @@ How to launch H2 database through browser
 			        "salary": 0.1,
 			        "startdate": "2002-11-16"
 			    }'
+<br />
 
  - DELETE: deleteUser
       curl --location --request DELETE 'http://localhost:8080/users/E0004'
-      
+<br />
+
  - BULK Upload user using multipart file
        curl --location --request POST 'http://localhost:8080/users/upload' \
             --form 'file=@"/D:/userfile_data.txt"'
+<br />
 
  Code analysis and code coverage
   - Can be identified through various maven plug-ins line pmd, checkstyle, jacoco, hammurapi and sonar.
   - The pom.xml file has relevant dependencies can be enabled for pmd to run mvn:site.
   - Once sonar server target is available, get token to execute below command for getting the reports: 
     mvn sonar:sonar -Dsonar.host.url=<<http://localhost:9000>> -Dsonar.login=<<the-generated-token>>
-  
+ 
    
  Continuous Integration/Continuous Deployment:
   - Herewith provided a Jenkinsfile which can be used for Continuous integration and deployment.
@@ -84,8 +94,8 @@ How to launch H2 database through browser
  
  Bonus, improvements and suggestions:
   - can use profile to maintain multiple application profiles to deploy into different environment such as dev,test,ust and prod
-  - we can explore below spring packages
-  	- spring-security to control api access by specific role. 
+  - we can explore below spring packages 
+    - spring-security to control api access by specific role. 
     - spring-boot-actuator package to moniter application health for production ready features.
 
 Note: Future release will be upgraded with the latest java environment and enhance application by adding,upgrading,enhancing testcases into all layers and fix specific findings.
