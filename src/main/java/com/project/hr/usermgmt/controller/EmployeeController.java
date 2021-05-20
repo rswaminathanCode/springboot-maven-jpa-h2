@@ -1,6 +1,7 @@
 package com.project.hr.usermgmt.controller;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,8 +51,7 @@ public class EmployeeController {
 		if (CSVUtils.hasCSVFormat(file)) {
 			try {
 				List<Employee> receivedList = CSVUtils.csvToEmployees(file.getInputStream());
-				// Below functions can remove duplicated record entries in the
-				// file
+				// Below functions can remove duplicated record entries in the file
 				List<Employee> removedDupList = CSVUtils.checkDuplicateUsers(receivedList);
 				
 				if (receivedList.size() == removedDupList.size()) {
@@ -92,7 +93,8 @@ public class EmployeeController {
 	}
 
 	/**
-	 * Below functions is to getAll users by given field filter
+	 * Below functions is to getAll users by given 
+	 * salary field filter and order by id 
 	 * 
 	 * @param emp
 	 * @return
@@ -123,7 +125,7 @@ public class EmployeeController {
 			throws ResourceNotFoundException {
 		Optional<Employee> user = empService.getUsersById(emp.getId());
 		if (user.isPresent()) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage("Bad input", ""));
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage("Employee ID already exists", ""));
 		} else {
 			empService.createUser(emp);
 			return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage("Successfully created.", emp));
@@ -157,14 +159,12 @@ public class EmployeeController {
 	@PutMapping(value = "/users/{id}")
 	public ResponseEntity<ResponseMessage> updateUser(@Valid @PathVariable String id, @RequestBody Employee emp)
 			throws ResourceNotFoundException {
-		Optional<Employee> user = empService.getUsersById(id);
-		if (user.isPresent()) {
-			// return new ResponseEntity<>(empService.updateUser(emp),
-			// HttpStatus.OK);
-			return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage("Successfully updated", user));
-		} else {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage("No such employee.", ""));
+		
+		if (Objects.equals(id,emp.getId()) && empService.getUsersById(emp.getId()).isPresent()) {
+			// return new ResponseEntity<>(empService.updateUser(emp),HttpStatus.OK);
+			return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage("Successfully updated", ""));
 		}
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage("No such employee.", ""));
 	}
 
 	/**

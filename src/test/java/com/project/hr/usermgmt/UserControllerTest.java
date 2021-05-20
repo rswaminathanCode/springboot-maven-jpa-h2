@@ -28,7 +28,6 @@ public class UserControllerTest {
 	public void getUser() throws Exception {
 		ResponseEntity<String> response = restTemplate
 				.getForEntity(new URL("http://localhost:" + port + "/users/E0001").toString(), String.class);
-		// System.out.println("getUser Result:::::" + response.getBody());
 		// assertEquals("Hello Controller", response.getBody());
 	}
 
@@ -39,7 +38,6 @@ public class UserControllerTest {
 
 		ResponseEntity<String> response = restTemplate
 				.postForEntity(new URL("http://localhost:" + port + "/users").toString(), payload, String.class);
-		// System.out.println("createUser Result:::::" + response.getBody());
 	}
 
 	@Test
@@ -63,7 +61,6 @@ public class UserControllerTest {
 	public void getUserByFilter() throws Exception {
 		ResponseEntity<String> response = restTemplate
 				.getForEntity(new URL("http://localhost:" + port + "/users/1000/4000").toString(), String.class);
-		System.out.println("getUserByFilter Result:::::" + response.getBody());
 	}
 
 }

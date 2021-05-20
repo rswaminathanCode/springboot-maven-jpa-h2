@@ -62,7 +62,7 @@ public class EmployeeService {
 	public List<Employee> getUsersBySalaryRangeSorted(String fromSalary, String toSalary) {
 		double fromSal = Double.parseDouble(fromSalary);
 		double toSal = Double.parseDouble(toSalary);
-		List<Employee> dbList = usersRepo.findAll(Sort.by(Sort.Direction.ASC, "salary"));
+		List<Employee> dbList = usersRepo.findAll(Sort.by(Sort.Direction.ASC, "id"));
 		return dbList.stream().filter(s -> (s.getSalary() >= fromSal && s.getSalary() <= toSal))
 				.limit((long) (toSal - fromSal)).collect(Collectors.toList());
 	}

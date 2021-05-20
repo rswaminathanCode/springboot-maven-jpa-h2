@@ -29,15 +29,20 @@ public class CSVUtils {
 	static String[] HEADERs = { "ID", "LOGIN", "NAME", "SALARY", "STARTDATE" };
 
 	public static boolean hasCSVFormat(MultipartFile file) {
-		// if (!TYPE.equals(file.getContentType())) {
-		// return false;
-		// }
-		if(Optional.of(file).isPresent() && file.getSize() > 0) {
+		//Can be enabled to restrict file from specific content type:
+		//TYPE.equals(file.getContentType())
+		if ( Optional.of(file).isPresent() && file.getSize() > 0) {
 			return true;
 		}
 		return false;
 	}
-
+    
+	private static final String ALPHANUMERIC_PATTERN = "^[a-zA-Z0-9]+$";
+    
+    public static boolean isAlphanumeric(final String input) {
+        return input.matches(ALPHANUMERIC_PATTERN);
+    }
+    
 	public static List<Employee> csvToEmployees(InputStream is) {
 		try (BufferedReader fileReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
 				CSVParser csvParser = new CSVParser(fileReader,
@@ -47,7 +52,7 @@ public class CSVUtils {
 
 			Iterable<CSVRecord> csvRecords = csvParser.getRecords();
 			for (CSVRecord csvRecord : csvRecords) {
-				
+                //TODO:commented data from the feed file to be ignored.
 				Employee emp = new Employee(csvRecord.get(0), csvRecord.get(1), csvRecord.get(2),
 						Double.parseDouble(csvRecord.get(3)), csvRecord.get(4));
 				employees.add(emp);
