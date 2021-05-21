@@ -161,6 +161,7 @@ public class EmployeeController {
 			throws ResourceNotFoundException {
 		
 		if (Objects.equals(id,emp.getId()) && empService.getUsersById(emp.getId()).isPresent()) {
+			empService.updateUser(emp);
 			// return new ResponseEntity<>(empService.updateUser(emp),HttpStatus.OK);
 			return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage("Successfully updated", ""));
 		}
